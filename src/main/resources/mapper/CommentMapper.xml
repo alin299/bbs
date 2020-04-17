@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="top.alin.bbs.mapper.CommentMapper">
+    <resultMap id="commentMap" type="comment">
+        <id column="id" property="id"></id>
+        <result column="post_id" property="postId"></result>
+        <result column="user_id" property="userId"></result>
+        <result column="to_user_id" property="toUserId"></result>
+        <result column="father_comment_id" property="fatherCommentId"></result>
+    </resultMap>
+
+    <select id="selectAllByMap" parameterType="map" resultMap="commentMap">
+        select * from comment
+        <where>
+            <if test="post_id != null"> and post_id = #{post_id}</if>
+            <if test="id != null"> and id= #{id}</if>
+        </where>
+    </select>
+
+</mapper>
