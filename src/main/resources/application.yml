@@ -3,21 +3,6 @@ spring:
     active: dev
 
 
----
-profiles:
-  dev
-
-server:
-  port: 8080
-
-spring:
-  datasource:
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bbs?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
-
-
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -28,3 +13,20 @@ mybatis-plus:
       logic-not-delete-value: 0
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: top.alin.bbs.entity
+
+---
+profiles:
+  dev
+
+server:
+  port: 80
+
+spring:
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3310/bbs?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+
+custom-cofig:
+  page-size: 10

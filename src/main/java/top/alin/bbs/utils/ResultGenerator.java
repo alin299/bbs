@@ -10,8 +10,6 @@ public class ResultGenerator {
     private static final String DEFAULT_MESSAGE = "SUCCESS";
 
     public static Result genSuccessResult() {
-        Result result = new Result();
-        result.setCode(ResultCode.SUCCESS).setMessage("sdfsdf");
         return new Result()
                 .setCode(ResultCode.SUCCESS)
                 .setMessage(DEFAULT_MESSAGE);

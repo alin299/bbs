@@ -3,56 +3,53 @@ package top.alin.bbs.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import top.alin.bbs.constants.Constants;
 import top.alin.bbs.entity.Post;
 import top.alin.bbs.service.PostService;
 import top.alin.bbs.utils.Result;
 import top.alin.bbs.utils.ResultGenerator;
+import top.alin.bbs.exception.ServiceException;
 
-import java.util.List;
 
-@Controller
 @Slf4j
+@RestController
+@RequestMapping("/post")
 public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/post")
-    public String addPost(Post post) {
+    @PostMapping()
+    public Result addPost(@RequestBody Post post) {
         postService.save(post);
-        return "redirect:/post";
+        return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/edit")
-    public void editPost(Post post) {
+    @PutMapping()
+    public Result editPost(@RequestBody Post post) {
         postService.update(post);
+        return ResultGenerator.genSuccessResult();
     }
 
-    @GetMapping("/post/{id}")
-    private String getPost(@PathVariable("id") Integer id, Model model) {
+    @GetMapping("/{id}")
+    private Result getPost(@PathVariable("id") Integer id) {
         Post post = postService.findById(id);
         if (post == null) {
-            return "error/404";
+            throw new ServiceException("post不存在");
         }
-        model.addAttribute("post", post);
-        return "view/post/show";
+        return ResultGenerator.genSuccessResult(post);
     }
 
-    @GetMapping("/post")
-    private String getPostList(@RequestParam(defaultValue = "1") Integer page,
-                               @RequestParam(defaultValue = "10") Integer size,
-                               Model model) {
+    @GetMapping()
+    private Result getPostList(@RequestParam(defaultValue = Constants.DEFAULT_PAGE) Integer page,
+                               @RequestParam(defaultValue = Constants.DEFAULT_PAGE_SIZE) Integer size) {
         Page<Post> pagination = postService.selectAll(page,size);
-        model.addAttribute("pagination", pagination);
-        return "view/post/list";
+        return ResultGenerator.genSuccessResult(pagination);
     }
 
-    @DeleteMapping("/post/{id}")
+    @DeleteMapping("/{id}")
     @ResponseBody
-    private Result deletePost(@PathVariable("id") Integer id, Model model) {
+    private Result deletePost(@PathVariable("id") Integer id) {
         postService.delete(id);
         return ResultGenerator.genSuccessResult();
     }
