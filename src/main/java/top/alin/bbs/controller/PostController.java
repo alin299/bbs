@@ -32,7 +32,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    private Result getPost(@PathVariable("id") Integer id) {
+    public Result getPost(@PathVariable("id") Integer id) {
         Post post = postService.findById(id);
         if (post == null) {
             throw new ServiceException("post不存在");
@@ -41,7 +41,7 @@ public class PostController {
     }
 
     @GetMapping()
-    private Result getPostList(@RequestParam(defaultValue = Constants.DEFAULT_PAGE) Integer page,
+    public Result getPostList(@RequestParam(defaultValue = Constants.DEFAULT_PAGE) Integer page,
                                @RequestParam(defaultValue = Constants.DEFAULT_PAGE_SIZE) Integer size) {
         Page<Post> pagination = postService.selectAll(page,size);
         return ResultGenerator.genSuccessResult(pagination);
@@ -49,7 +49,7 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    private Result deletePost(@PathVariable("id") Integer id) {
+    public Result deletePost(@PathVariable("id") Integer id) {
         postService.delete(id);
         return ResultGenerator.genSuccessResult();
     }

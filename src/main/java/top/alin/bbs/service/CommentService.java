@@ -3,9 +3,9 @@ package top.alin.bbs.service;
 import top.alin.bbs.entity.Comment;
 
 public interface CommentService {
-    int save(Comment Comment);
+    int save(Comment comment);
 
-    int update(Comment Comment);
+    int update(Comment comment);
 
     int delete(Integer id);
 
