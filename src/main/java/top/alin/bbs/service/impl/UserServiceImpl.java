@@ -8,6 +8,8 @@ import top.alin.bbs.entity.User;
 import top.alin.bbs.mapper.UserMapper;
 import top.alin.bbs.service.UserService;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -27,9 +29,21 @@ public class UserServiceImpl implements UserService {
         if (findByName(user.getUsername()) != null) {
             return false;
         }
-
         userMapper.insert(user);
         return true;
+    }
+
+    //添加用户
+    @Override
+    public void add(User user) {
+        userMapper.insert(user);
+    }
+
+    //查询所有用户
+    @Override
+    public List<User> selectUserList() {
+        List<User> userList = userMapper.selectList(null);
+        return userList;
     }
 
 }

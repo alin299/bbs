@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 @Mapper
-public interface PostMapper  extends BaseMapper<Post> {
+public interface PostMapper extends BaseMapper<Post> {
 }

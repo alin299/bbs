@@ -1,6 +1,5 @@
 package top.alin.bbs.service;
 
-import top.alin.bbs.entity.Comment;
 import top.alin.bbs.entity.SysLog;
 
 public interface SysLogService {
