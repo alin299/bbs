@@ -33,12 +33,6 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    //添加用户
-    @Override
-    public void add(User user) {
-        userMapper.insert(user);
-    }
-
     //查询所有用户
     @Override
     public List<User> selectUserList() {

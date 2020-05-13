@@ -2,8 +2,11 @@ package top.alin.bbs.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.alin.bbs.entity.User;
 import top.alin.bbs.service.UserService;
 
@@ -16,17 +19,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    //添加用户
-    @GetMapping("/add")
-    public void add(User user){
-        userService.add(user);
+    @GetMapping("/save")
+    public String toSave() {
+        return "admin/list";
+    }
+
+    @PostMapping("/save")
+    public void save(@RequestParam("username") String username,
+                     @RequestParam("password") String password){
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        userService.save(user);
     }
 
     //查询所有用户
-    @GetMapping("/selectUserList")
-    public List<User> selectUserList(){
+    @RequestMapping("/list")
+    public String userList(Model model){
         List<User> userList = userService.selectUserList();
-        return userList;
+        model.addAttribute("userList",userList);
+        return "admin/list";
     }
 
 
