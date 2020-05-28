@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import top.alin.bbs.entity.User;
+import top.alin.bbs.mapper.UserRoleMapper;
 import top.alin.bbs.service.UserService;
 import top.alin.bbs.utils.Result;
 import top.alin.bbs.utils.ResultGenerator;
@@ -22,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     //加密对象
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -42,12 +46,17 @@ public class UserController {
     @ResponseBody
     public Result save(@RequestParam("username") String username,
                        @RequestParam("password") String password,
-                       @RequestParam("roleId") String roleId){
+                       @RequestParam("roleId") int roleId){
         User user = new User();
         user.setUsername(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
         boolean isSave = userService.save(user);
+
         if (isSave){
+            User userAdded = userService.findByName(username);
+            Long userAddedId = userAdded.getId();
+            int userId = userAddedId.intValue();
+            userRoleMapper.save(userId,roleId);
             return ResultGenerator.genSuccessResult();
         }else{
             return ResultGenerator.genFailResult("用户名已存在！");

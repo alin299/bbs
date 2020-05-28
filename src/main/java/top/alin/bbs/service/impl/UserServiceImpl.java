@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.alin.bbs.entity.User;
 import top.alin.bbs.mapper.UserMapper;
+import top.alin.bbs.mapper.UserRoleMapper;
 import top.alin.bbs.service.UserService;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     /**
      * 通过username查询
@@ -52,11 +56,6 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         userMapper.insert(user);
-//        String username = user.getUsername();
-//        QueryWrapper<User> wrapper = new QueryWrapper<>();
-//        wrapper.eq("username", username);
-//        User user2 = userMapper.selectOne(wrapper);
-
         return true;
     }
 

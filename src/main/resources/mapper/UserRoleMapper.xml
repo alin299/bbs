@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="top.alin.bbs.mapper.UserRoleMapper">
+    <resultMap id="userMap" type="top.alin.bbs.entity.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <collection property="roles" ofType="top.alin.bbs.entity.Role" resultMap="roleMap"/>
+    </resultMap>
+    <resultMap id="roleMap" type="top.alin.bbs.entity.Role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleDesc" column="role_desc"/>
+    </resultMap>
+    <select id="findUserByUsername" resultType="top.alin.bbs.entity.User" parameterType="java.lang.String">
+        select * from user where username = #{username}
+    </select>
+
+    <select id="findRolesByUserName" resultMap="roleMap" parameterType="java.lang.String">
+       SELECT r.id,r.role_name,r.role_desc FROM user u
+         LEFT JOIN user_role ur on u.id = ur.user_id
+          LEFT JOIN role r on ur.role_id = r.id
+            WHERE u.username = #{username}
+    </select>
+
+    <insert id="save" >
+        insert into user_role values(#{user_id},#{role_id})
+    </insert>
+</mapper>

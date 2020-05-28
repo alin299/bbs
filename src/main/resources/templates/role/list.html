@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/xadmin.css}">
+    <style>
+    #unactive {
+        background:#fff;
+    }
+
+    #active {
+        background:#009688;
+        color:white;
+        pointer-events:none;
+    }
+    </style>
+</head>
+<body>
+<div class="x-nav">
+    <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">用户管理</a>
+        <a>
+            <cite>角色列表</cite>
+        </a>
+    </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form class="layui-form layui-col-space5" th:action="@{/role/search}" th:method="post">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" id="searchArea" name="rolename" placeholder="请输入角色名" autocomplete="off"
+                                   class="layui-input" th:value="${not #strings.isEmpty(searchArea) ? searchArea : ''}">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button type="submit" onclick="load()" id="searchBtn" class="layui-btn" lay-submit="" lay-filter="sreach">
+                                <i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-header">
+                    <button id="delSelected" class="layui-btn layui-btn-danger"><i class="layui-icon"></i>批量删除
+                    </button>
+                    <button class="layui-btn" onclick="xadmin.open('添加角色','/role/add.html',600,400)">
+                        <i class="layui-icon"></i>添加
+                    </button>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" lay-filter="checkall" name="" lay-skin="primary">
+                            </th>
+                            <th>ID</th>
+                            <th>角色名称</th>
+                            <th>角色描述</th>
+                            <th>操作</th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="role : ${page.records}">
+                                <td>
+                                    <input type="checkbox" name="id" lay-skin="primary">
+                                </td>
+                                <td class="objId" th:text="${role.getId()}"></td>
+                                <td th:text="${role.getRoleName()}"></td>
+                                <td th:text="${role.getRoleDesc()}"></td>
+                                <td class="td-manage">
+                                    <input onclick="edit(this)" type="button"
+                                           class="layui-btn layui-btn-normal layui-btn-mini" value="修改">
+                                    <input onclick="del(this)" type="button"
+                                           class="layui-btn layui-btn-danger layui-btn-mini" value="删除">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--页码部分-->
+                <div class="layui-card-body">
+                    <div class="page">
+                        <!--当页数在(0,7]之间时存在以下div-->
+                        <div th:if="${(page.pages gt 0) && (page.pages le 7)}">
+                            <!--首页-->
+                            <a th:href="@{${jumpUrl}+1}" th:text="首页" th:class="num"
+                               th:style="${page.current == 1}? 'pointer-events:none;':'' "></a>
+                            <!--上一页-->
+                            <a th:href="@{${jumpUrl}+${(page.current)-1}}" th:text="上一页" th:class="prev"
+                               th:style="${page.current == 1}? 'pointer-events:none;':'' "></a>
+                            <!--中间页码-->
+                            <a th:href="@{${jumpUrl}+ ${i}}"
+                               th:each="i :${#numbers.sequence(1, page.pages)}" th:text="${i}"
+                               th:id="${page.current == i}? 'active':'unactive' "></a>
+                            <!--下一页-->
+                            <a th:href="@{${jumpUrl}+${page.current+1}}" th:text="下一页" th:class="next"
+                               th:style="${page.current == page.pages}? 'pointer-events:none;':'' "></a>
+                            <!--尾页-->
+                            <a th:href="@{${jumpUrl}+${page.pages}}" th:text="尾页" th:class="num"
+                               th:style="${page.current == page.pages}? 'pointer-events:none;':'' "></a>
+                            <!--总页数-->
+                            <a th:text="共+${page.pages}+页" th:class="num"
+                               th:style="'pointer-events:none;'"></a>
+                        </div>
+                        <!--当页数大于7存在以下div-->
+                        <div th:if="${(page.pages gt 7)}">
+                            <!--首页-->
+                            <a th:href="@{${jumpUrl}+1}" th:text="首页" th:class="num"
+                               th:style="${page.current == 1}? 'pointer-events:none;':'' "></a>
+                            <!--上一页-->
+                            <a th:href="@{${jumpUrl}+${(page.current)-1}}" th:text="上一页" th:class="prev"
+                               th:style="${page.current == 1}? 'pointer-events:none;':'' "></a>
+                            <!--中间页码-->
+                            <!--当前页小于等于4时，页码显示在[1,5]之间，共显示5个页码-->
+                            <a th:if="${(page.current le 4)}"
+                               th:href="@{${jumpUrl}+ ${i}}"
+                               th:each="i :${#numbers.sequence(1,5)}" th:text="${i}"
+                               th:id="${page.current == i}? 'active':'unactive' "></a>
+                            <!-- 最后一页与当前页面之差，小于等于3，共显示5个页码-->
+                            <a th:if="${((page.pages) - (page.current) le 3)}"
+                               th:href="@{${jumpUrl}+ ${i}}"
+                               th:each="i :${#numbers.sequence((page.pages)-4,page.pages)}" th:text="${i}"
+                               th:id="${page.current == i}? 'active':'unactive' "></a>
+                            <!-- 最后一页与当前页面之差，大于3，且当前页大于4，共显示5个页码-->
+                            <a th:if="${((page.pages) - (page.current) gt 3) && page.current gt 4}"
+                               th:href="@{${jumpUrl}+ ${i}}"
+                               th:each="i :${#numbers.sequence((page.current)-1,page.current+3)}" th:text="${i}"
+                               th:id="${page.current == i}? 'active':'unactive' "></a>
+                            <!--下一页-->
+                            <a th:href="@{${jumpUrl}+${page.current+1}}" th:text="下一页" th:class="next"
+                               th:style="${page.current == page.pages}? 'pointer-events:none;':'' "></a>
+                            <!--尾页-->
+                            <a th:href="@{${jumpUrl}+${page.pages}}" th:text="尾页" th:class="num"
+                               th:style="${page.current == page.pages}? 'pointer-events:none;':'' "></a>
+                            <!--总页数-->
+                            <a th:text="共+${page.pages}+页" th:class="num"
+                               th:style="'pointer-events:none;'"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/lib/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script>
+    function load(){
+        //搜索完之后搜索框中进行回显
+        var rolename = $("#searchArea").val();
+        console.log(rolename);
+        $("#searchArea").val(rolename);
+    }
+    //跳到修改管理员页面
+    function edit(obj) {
+        //根据当前行获取当前管理员id
+        var id = $(obj).parents("tr").find(".objId").text();
+        //打开修改界面，并传递id
+        xadmin.open("修改角色信息", "/role/edit.html?id=" + id,600,400);
+    }
+    //删除管理员
+    function del(obj) {
+        layer.confirm('确认要删除吗？', function (index) {
+            //根据当前行获取当前管理员id
+            var id = $(obj).parents("tr").find(".objId").text();
+            //发送异步请求删除数据
+            $.ajax({
+                url: '/role/del?id='+id,
+                method: 'post',
+                dataType: 'JSON',
+                success: function (res) {
+                    console.log(res);
+                    if(res.code==200){
+                        //提示删除完成
+                        layer.msg('已删除!', {icon: 1, time: 1000}, function () {
+                            //页面重新加载
+                            location.reload();
+                        });
+                    }else{
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function () {
+                    layer.msg("删除失败！", {icon: 2});
+                }
+            });
+
+        });
+    }
+    //批量删除管理员
+    window.onload = function () {
+        //给删除选中按钮添加单击事件
+        document.getElementById("delSelected").onclick = function () {
+            layer.confirm('确认要删除吗？', function (index) {
+            // if (confirm("您确定要删除选中条目吗？")) {
+                //get请求后面带的参数
+                var value = '';
+                //获取checkbox的class
+                var cbs = document.getElementsByName("id");
+                for (var i = 0; i < cbs.length; i++) {
+                    if (cbs[i].checked) {
+                        //遍历得到复选框选中的id
+                        var id = $(cbs[i]).parents("tr").find(".objId").text();
+                        //拼接请求参数sdminId=id
+                        value = value.concat('id=', id, '&');
+                    }
+                }
+                //裁剪参数最后拼接的'&'
+                value = value.substring(0, value.length - 1);
+
+                $.ajax({
+                    url: '/role/delSelected?'+value,
+                    method: 'post',
+                    dataType: 'JSON',
+                    success: function (res) {
+                        console.log(res);
+                        if(res.code==200){
+                            //提示删除完成
+                            layer.msg('已删除!', {icon: 1, time: 1000}, function () {
+                                //页面重新加载
+                                location.reload();
+                            });
+                        }else{
+                            layer.msg(res.message, {icon: 2});
+                        }
+                    },
+                    error: function () {
+                        layer.msg("删除失败！", {icon: 2});
+                    }
+                });
+            });
+        }
+    }
+    // 监听全选
+    layui.use(['form'], function () {
+        var form = layui.form,
+            $ = layui.jquery;
+        form.on('checkbox(checkall)', function (data) {
+            if (data.elem.checked) {
+                $('tbody input').prop('checked', true);
+            } else {
+                $('tbody input').prop('checked', false);
+            }
+            form.render('checkbox');
+        });
+    });
+</script>
+</html>
