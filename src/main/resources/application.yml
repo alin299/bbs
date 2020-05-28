@@ -6,6 +6,7 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #配置日志
+    map-underscore-to-camel-case: true
   global-config:
     db-config:
       logic-delete-field: flag  # 逻辑删除

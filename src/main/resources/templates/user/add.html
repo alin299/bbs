@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
-    
     <head>
         <meta charset="UTF-8">
         <title></title>
@@ -16,14 +15,14 @@
                 <form class="layui-form" id="addForm">
                   <div class="layui-form-item">
                       <label for="username" class="layui-form-label">
-                          <span class="x-red">*</span>登录名
+                          <span class="x-red">*</span>用户名
                       </label>
                       <div class="layui-input-inline">
                           <input type="text" id="username" name="username" required="" lay-verify="required"
                           autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
-                          <span class="x-red">*</span>将会成为您唯一的登入名
+                          <span class="x-red">*</span>将会成为您唯一的用户名
                       </div>
                   </div>
                   <div class="layui-form-item">
@@ -35,9 +34,17 @@
                           autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
-                          6到16个字符
+                          <span class="x-red">*</span>6到16个字符
                       </div>
                   </div>
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label"><span class="x-red">*</span>角色</label>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="checkbox" name="roleId" value="1" lay-skin="primary" title="普通管理员">-->
+<!--                            <input type="checkbox" name="roleId" value="2" lay-skin="primary" title="超级管理员">-->
+<!--                            <input type="checkbox" name="roleId" value="3" lay-skin="primary" title="普通用户">-->
+<!--                        </div>-->
+<!--                    </div>-->
                   <div class="layui-form-item">
                       <label class="layui-form-label">
                       </label>
@@ -57,29 +64,35 @@
         <![endif]-->
         <script type="text/javascript" th:inline="javascript">
             layui.use(['form', 'layer'], function() {
-                var form = layui.form;
-                var $ = layui.jquery;
+                var form = layui.form,
+                    $ = layui.jquery;
                 form.on('submit(add)', function (data) {
                     $.ajax({
                         url: '/user/save',
                         method: 'post',
                         data: data.field,
                         dataType: 'JSON',
-                        success: function () {
+                        success: function (res) {
+                            if(res.code==200){
+                                layer.msg("添加成功！", {icon: 6}, function() {
+                                    //关闭当前frame
+                                    xadmin.close();
+                                    // 可以对父窗口进行刷新
+                                    xadmin.father_reload();
+                                });
+                            }else{
+                                layer.msg(res.message, {icon: 2}, function() {
+                                    xadmin.close();
+                                });
+                            }
                         },
                         error: function () {
+                            layer.msg("添加失败！", {icon: 2});
                         }
-                    });
-                    layer.msg("添加成功！", {icon: 6}, function() {
-                        //关闭当前frame
-                        xadmin.close();
-                        // 可以对父窗口进行刷新
-                        xadmin.father_reload();
                     });
                     return false;
                 });
             });
         </script>
     </body>
-
 </html>

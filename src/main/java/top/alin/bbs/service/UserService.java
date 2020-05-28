@@ -1,5 +1,6 @@
 package top.alin.bbs.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import top.alin.bbs.entity.User;
 
 import java.util.List;
@@ -8,8 +9,20 @@ public interface UserService {
 
     User findByName(String username);
 
+    List<User> selectUserList();
+
     boolean save(User user);
 
-    //查询所有用户
-    List<User> selectUserList();
+    boolean edit(User user);
+
+    User findUserById(Long id);
+
+    boolean del(Long id);
+
+    boolean delSelected(Long[] ids);
+
+    IPage<User> selectByPage(int start, int size);//分页显示全部
+    IPage<User> selectByPage2(int start, int size);//分页显示全部
+
+    IPage<User> searchByPage(int start, int size, String username);//按username分页查询
 }

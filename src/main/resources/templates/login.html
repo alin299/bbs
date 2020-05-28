@@ -42,22 +42,23 @@
             var $ = layui.jquery;
             form.on('submit(login)', function (data) {
                 $.ajax({
-                    url: '/user/login',
+                    url: '/login',
                     method: 'post',
                     data: data.field,
                     dataType: 'JSON',
                     success: function (res) {
-                        if (res.flag) {
-                            layer.msg("登录成功！", {icon: 1});
+                        console.log(res);
+                        if (res.code==200) {
+                            layer.msg(res.msg, {icon: 1});
                             setTimeout(function () {
                                 location.href="index.html";
                             }, 500);
-                        } else {
-                            layer.msg("用户名或密码错误！", {icon: 2});
+                        }else {
+                            layer.msg(res.msg, {icon: 2});
                         }
                     },
-                    error: function () {
-                        layer.msg("登录失败！", {icon: 2});
+                    error: function (res) {
+                        layer.msg(res.msg, {icon: 2});
                     }
                 });
                 return false;

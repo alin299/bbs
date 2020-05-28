@@ -10,6 +10,17 @@
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/xadmin.css}">
+    <script type="text/javascript" th:src="@{/lib/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        // 是否开启刷新记忆tab功能
+        //var is_remember = false;
+    </script>
 </head>
 <body class="index">
 <!-- 顶部开始 -->
@@ -21,7 +32,7 @@
     </div>
     <ul class="layui-nav right" lay-filter="">
         <li class="layui-nav-item">
-            <a href="javascript:;">[[${session.loginUser}]]</a>
+            <a href="javascript:;">[[${session.username}]]</a>
             <dl class="layui-nav-child">
                 <!-- 二级菜单 -->
                 <dd>
@@ -29,7 +40,7 @@
                 <dd>
                     <a onclick="xadmin.open('切换帐号','http://www.baidu.com')">切换帐号</a></dd>
                 <dd>
-                    <a href="./login.html">退出</a></dd>
+                    <a th:href="@{/user/logout}">退出</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item to-index">
@@ -44,15 +55,21 @@
         <ul id="nav">
             <li>
                 <a href="javascript:;">
-                    <i class="iconfont left-nav-li" lay-tips="管理员管理">&#xe6b8;</i>
-                    <cite>管理员管理</cite>
+                    <i class="iconfont left-nav-li" lay-tips="用户管理">&#xe6b8;</i>
+                    <cite>用户管理</cite>
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a onclick="xadmin.add_tab('管理员列表','/user/list')">
+                        <a onclick="xadmin.add_tab('用户列表','/user/view')">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>管理员列表</cite>
+                            <cite>用户列表</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="xadmin.add_tab('角色列表','/role/view')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>角色列表</cite>
                         </a>
                     </li>
                 </ul>
@@ -78,8 +95,8 @@
             </dl>
         </div>
         <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
-                <iframe th:replace="welcome :: html" th:frameborder="0" th:scrolling="yes" class="x-iframe"></iframe>
+            <div class="layui-tab-item layui-show" style="overflow:auto">
+                <iframe th:replace="welcome::html" th:scrolling="yes" th:frameborder="0" class="x-iframe"></iframe>
             </div>
         </div>
         <div id="tab_show"></div>
@@ -88,16 +105,5 @@
 <div class="page-content-bg"></div>
 <style id="theme_style"></style>
 <!-- 右侧主体结束 -->
-<script type="text/javascript" th:src="@{/lib/layui/layui.js}"></script>
-<script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
-<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
-<!--[if lt IE 9]>
-<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
-<script>
-    // 是否开启刷新记忆tab功能
-    //var is_remember = false;
-</script>
 </body>
 </html>

@@ -1,12 +1,11 @@
 package top.alin.bbs.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class MyMvcConfig implements WebMvcConfigurer {
+public class MyMvcConfig implements WebMvcConfigurer  {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry){
@@ -15,16 +14,18 @@ public class MyMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/login.html").setViewName("login");
 
         registry.addViewController("/index.html").setViewName("index");
-        registry.addViewController("/admin/list.html").setViewName("admin/list");
-        registry.addViewController("/admin/add.html").setViewName("admin/add");
-        registry.addViewController("/user/save").setViewName("admin/add");
-    }
+        registry.addViewController("/user/list.html").setViewName("user/list");
+        registry.addViewController("/user/view").setViewName("user/list");
+        registry.addViewController("/user/add.html").setViewName("user/add");
+        registry.addViewController("/user/save").setViewName("user/add");
+        registry.addViewController("/user/edit.html").setViewName("user/edit");
+        registry.addViewController("/user/edit").setViewName("user/edit");
 
-    //登录拦截器
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginHandlerInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/","/login.html","/user/login","/css/**","/fonts/**","/js/**","/images/**","/lib/**");
+        registry.addViewController("/role/list.html").setViewName("role/list");
+        registry.addViewController("/role/view").setViewName("role/list");
+        registry.addViewController("/role/add.html").setViewName("role/add");
+        registry.addViewController("/role/save").setViewName("role/add");
+        registry.addViewController("/role/edit.html").setViewName("role/edit");
+        registry.addViewController("/role/edit").setViewName("role/edit");
     }
 }

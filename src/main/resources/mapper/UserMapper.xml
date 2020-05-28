@@ -4,4 +4,31 @@
 
 <mapper namespace="top.alin.bbs.mapper.UserMapper">
 
+    <resultMap id="userMap" type="top.alin.bbs.entity.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="createTime" column="create_time"/>
+        <collection property="roles" ofType="top.alin.bbs.entity.Role" resultMap="roleMap"/>
+    </resultMap>
+
+    <resultMap id="roleMap" type="top.alin.bbs.entity.Role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleDesc" column="role_desc"/>
+    </resultMap>
+
+    <select id="getUserPage" resultMap="userMap">
+        SELECT
+            u.*,
+            r.role_name,r.role_desc
+        FROM
+            user u
+            left join user_role ur on u.id = ur.user_id
+            left join role r on r.id = ur.role_id
+            where u.deleted = 0
+            ${ew.customSqlSegment}
+    </select>
+
+
 </mapper>
