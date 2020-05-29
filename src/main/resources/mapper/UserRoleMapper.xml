@@ -25,7 +25,12 @@
             WHERE u.username = #{username}
     </select>
 
-    <insert id="save" >
+    <insert id="save">
         insert into user_role values(#{user_id},#{role_id})
     </insert>
+
+    <update id="edit">
+     update user_role SET role_id=#{roleId}
+     where user_id=#{id}
+    </update>
 </mapper>

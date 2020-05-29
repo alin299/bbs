@@ -14,4 +14,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     IPage<User> getUserPage(IPage<User> page, @Param("ew") QueryWrapper<User> queryWrapper);
 
+    IPage<User> searchUserPage(IPage<User> page, @Param("ew") QueryWrapper<User> queryWrapper);
+
+    User findUserById(@Param("ew") QueryWrapper<User> queryWrapper);
 }

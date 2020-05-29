@@ -18,4 +18,6 @@ public interface UserRoleMapper {
     User findUserByUsername(String username);
 
     void save(int user_id, int role_id);
+
+    void edit(int id, int roleId);
 }

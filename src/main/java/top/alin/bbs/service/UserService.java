@@ -15,6 +15,8 @@ public interface UserService {
 
     boolean edit(User user);
 
+    boolean editUserRole(Long id, Long roleId);
+
     User findUserById(Long id);
 
     boolean del(Long id);
@@ -22,7 +24,8 @@ public interface UserService {
     boolean delSelected(Long[] ids);
 
     IPage<User> selectByPage(int start, int size);//分页显示全部
-    IPage<User> selectByPage2(int start, int size);//分页显示全部
 
     IPage<User> searchByPage(int start, int size, String username);//按username分页查询
+
+
 }

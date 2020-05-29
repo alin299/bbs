@@ -53,10 +53,12 @@ public class UserController {
         boolean isSave = userService.save(user);
 
         if (isSave){
+            //获取刚刚插入的用户id，和roleid一起插入
             User userAdded = userService.findByName(username);
             Long userAddedId = userAdded.getId();
             int userId = userAddedId.intValue();
             userRoleMapper.save(userId,roleId);
+            //返回结果为成功
             return ResultGenerator.genSuccessResult();
         }else{
             return ResultGenerator.genFailResult("用户名已存在！");
@@ -72,12 +74,16 @@ public class UserController {
     @ResponseBody
     public Result edit(@RequestParam("id") Long id,
                      @RequestParam("username") String username,
-                     @RequestParam("password") String password){
+                     @RequestParam("password") String password,
+                       @RequestParam("roleId") Long roleId){
         User user = userService.findUserById(id);
         user.setUsername(username);
         user.setPassword(password);
+        //修改用户信息
         boolean isEdit = userService.edit(user);
-        if (isEdit){
+        //修改角色
+        boolean isEditUserRole = userService.editUserRole(id, roleId);
+        if (isEdit&&isEditUserRole){
             return ResultGenerator.genSuccessResult();
         }else{
             return ResultGenerator.genFailResult("用户名已存在！");
@@ -128,7 +134,7 @@ public class UserController {
     //pn是每次传回来的当前页
     public String view(Model model,
                        @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn) {
-        IPage<User> page = userService.selectByPage2(pn, 5);
+        IPage<User> page = userService.selectByPage(pn, 5);
         //此处得到的page对象,包含了current（当前页）,pages（总页数），total（总记录数），records（记录，就是查询到的List集合）
         model.addAttribute("page", page);
         model.addAttribute("jumpUrl", "/user/view?pn=");

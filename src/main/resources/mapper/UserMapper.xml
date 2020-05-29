@@ -13,21 +13,48 @@
     </resultMap>
 
     <resultMap id="roleMap" type="top.alin.bbs.entity.Role">
-        <id property="id" column="id"/>
+        <id property="id" column="role_id"/>
         <result property="roleName" column="role_name"/>
         <result property="roleDesc" column="role_desc"/>
     </resultMap>
 
+    <!--根据id查询user-->
+    <select id="findUserById" resultMap="userMap">
+        SELECT
+            u.*,
+            r.id as role_id,r.role_name,r.role_desc
+        FROM
+            user u
+            left join user_role ur on u.id = ur.user_id
+            left join role r on ur.role_id = r.id
+            ${ew.customSqlSegment}
+            and u.deleted = 0
+    </select>
+
+    <!--分页查询-->
     <select id="getUserPage" resultMap="userMap">
         SELECT
             u.*,
-            r.role_name,r.role_desc
+            r.id,r.role_name,r.role_desc
         FROM
             user u
             left join user_role ur on u.id = ur.user_id
             left join role r on r.id = ur.role_id
             where u.deleted = 0
             ${ew.customSqlSegment}
+    </select>
+
+    <!--分页条件查询-->
+    <select id="searchUserPage" resultMap="userMap">
+        SELECT
+            u.*,
+            r.id,r.role_name,r.role_desc
+        FROM
+            user u
+            left join user_role ur on u.id = ur.user_id
+            left join role r on r.id = ur.role_id
+            ${ew.customSqlSegment}
+            and u.deleted = 0
     </select>
 
 
